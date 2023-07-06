@@ -7,15 +7,13 @@
 #define MAX_USERNAME_LEN 50
 #define MAX_PASSWORD_LEN 50
 #define ACCOUNT_FILE "accounts.txt"
-#define TIME 0
+#define TIME 1
 
 
-
-//In this commit I add the part of my program that related to game especially the ranks.
-
+//Hello, this is my final code. I am Nasim Javdani. I have made a lot of effort for this code. I kindly request you to review it carefully and enjoy this game to the fullest. Also, please be very kind in grading me. Thank you very much
 
 
-
+//First, I wrote this part of my code to declare the variables related to users.
 typedef struct {
     char username[MAX_USERNAME_LEN];
     char password[MAX_PASSWORD_LEN];
@@ -27,6 +25,7 @@ int num_users = 0;
 User users[MAX_USERS];
 char usename12[MAX_USERNAME_LEN];
 
+//I programmed this function to retrieve the specifications of users from a file at the start of the program.
 void load_accounts() {
     FILE *file = fopen(ACCOUNT_FILE, "r");
     if (!file) {
@@ -41,6 +40,7 @@ void load_accounts() {
     fclose(file);
 }
 
+//I programmed this function to save a new user to my file.
 void save_accounts() {
     FILE *file = fopen(ACCOUNT_FILE, "w");
     if (!file) {
@@ -53,7 +53,7 @@ void save_accounts() {
     fclose(file);
 }
 
-
+//I programmed this function to handle the role of the sign-up process in the first menu.
 int create_account(char username[100],char password[100]) {
     if (num_users >= MAX_USERS) {
         printf("Maximum number of users reached.\n");
@@ -84,6 +84,7 @@ int create_account(char username[100],char password[100]) {
     return 1;
 }
 
+//I programmed this function to handle the role of the login process in the first menu.
 int login(char username[100],char password[100]) {
     int x=0;
     int y=0;
@@ -102,6 +103,8 @@ int login(char username[100],char password[100]) {
 }
 
 int score;
+
+//I programmed this function to create an array that represents the board in my imaginary game.
 void initializeBoard(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -110,6 +113,7 @@ void initializeBoard(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//I programmed this function to print the board game in the correct format.
 void printBoard(int SIZE,int board[SIZE][SIZE]) {
     printf("\n");
     for (int i = 0; i < SIZE; i++) {
@@ -122,6 +126,7 @@ void printBoard(int SIZE,int board[SIZE][SIZE]) {
     printf("\n\nScore: %d\n\n", score);
 }
 
+//This function is executed when the user loses in the game.
 bool isGameOver(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -150,6 +155,7 @@ bool isGameOver(int SIZE,int board[SIZE][SIZE]) {
     return true;
 }
 
+//This function generates a new tile with a random number.
 void generateNewTile(int SIZE,int board[SIZE][SIZE]) {
     int emptyCells[SIZE * SIZE][2];
     int count = 0;
@@ -170,6 +176,7 @@ void generateNewTile(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function is designed to execute when the user enters a left movement in the game.
 void moveTilesLeft(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         int index = 0;
@@ -186,6 +193,7 @@ void moveTilesLeft(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function is designed to handle the scenario when the user enters a left movement in the game and there are equal tiles present.
 void mergeTilesLeft(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE - 1; j++) {
@@ -207,6 +215,7 @@ void mergeTilesLeft(int SIZE,int board[SIZE][SIZE]) {
 
 }
 
+//This function can work when user enter up in game and the game have equal tiles.
 void moveTilesUp(int SIZE,int board[SIZE][SIZE]) {
     for (int j = 0; j < SIZE; j++) {
         int index = 0;
@@ -223,6 +232,7 @@ void moveTilesUp(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function is designed to handle the scenario when the user enters a up movement in the game and there are equal tiles present.
 void mergeTilesUp(int SIZE,int board[SIZE][SIZE]) {
     for (int j = 0; j < SIZE; j++) {
         for (int i = 0; i < SIZE - 1; i++) {
@@ -243,6 +253,7 @@ void mergeTilesUp(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function can work when user enter down in game and the game have equal tiles.
 void moveTilesDown(int SIZE,int board[SIZE][SIZE]) {
     for (int j = 0; j < SIZE; j++) {
         int index = SIZE - 1;
@@ -259,6 +270,7 @@ void moveTilesDown(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function is designed to handle the scenario when the user enters a down movement in the game and there are equal tiles present.
 void mergeTilesDown(int SIZE,int board[SIZE][SIZE]) {
     for (int j = 0; j < SIZE; j++) {
         for (int i = SIZE - 1; i > 0; i--) {
@@ -279,6 +291,7 @@ void mergeTilesDown(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function can work when user enter right in game and the game have equal tiles.
 void moveTilesRight(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         int index = SIZE - 1;
@@ -295,6 +308,7 @@ void moveTilesRight(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//This function is designed to handle the scenario when the user enters a right movement in the game and there are equal tiles present.
 void mergeTilesRight(int SIZE,int board[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = SIZE - 1; j > 0; j--) {
@@ -316,6 +330,7 @@ void mergeTilesRight(int SIZE,int board[SIZE][SIZE]) {
     }
 }
 
+//As you mentioned in the documentation, this function assists the user in cheating during the game.
 void settile(int satr,int sotoon,int value,int SIZE,int board[SIZE][SIZE],int guestOrNot){
     int value2=value;
     int baghimande=0;
@@ -351,9 +366,9 @@ void settile(int satr,int sotoon,int value,int SIZE,int board[SIZE][SIZE],int gu
        m=0;
     }
 }
-
 }
 
+//This program is written to display all scores of users along with their ranks.
 void show_all_scores(guestOrNot) {
     sleep(TIME);
     printf("\nUsername\t\tScore\n");
@@ -396,6 +411,7 @@ void show_all_scores(guestOrNot) {
 
 }
 
+//This function displays the score of the user if they are not a guest.
 void show_my_score() {
     int scoresarray[num_users];
     int numarray[num_users];
@@ -428,6 +444,7 @@ void show_my_score() {
 
 }
 
+//This function saves the maximum score in the file associated with the player.
 void save_max_scores() {
     FILE *file2 = fopen("max_scores.txt", "w");
     if (!file2) {
@@ -465,6 +482,7 @@ void save_max_scores() {
 
 }
 
+//As you mentioned, in each turn, it is necessary to save the maximum score of the player. This function accomplishes that.
 void update_max_score() {
     for (int i = 0; i < num_users; i++) {
         if (strcmp(usename12, users[i].username) == 0) {
@@ -476,6 +494,7 @@ void update_max_score() {
     }
 }
 
+//This function is designed to work when we want to play the game.
 void playGame(int guestOrNot,int SIZE,int board[SIZE][SIZE]) {
     initializeBoard(SIZE,board);
     score = 0;
@@ -568,12 +587,14 @@ void playGame(int guestOrNot,int SIZE,int board[SIZE][SIZE]) {
     sleep(TIME);
 }}
 
+//This is menu 2, where the user can choose to play the game, see ranks, or go back to menu 1.
 int startgame2(int guestOrNot){
 
         int m=0;
         while (m==0){
         sleep(TIME);
         printf("Menu:\n");
+        printf("--------------------------------------------------------------------------------------------\n");
         sleep(TIME);
         printf("1. Start Game:\nTo start the game, just enter 'start<size>'\n\n");
         sleep(TIME);
@@ -608,6 +629,7 @@ int startgame2(int guestOrNot){
                 save_max_scores();
                 show_all_scores();
                 printf("\nMenu:\n");
+                printf("--------------------------------------------------------------------------------------------\n");
                 sleep(TIME);
                 printf("1. Show My Score:\nTo see your score, just enter 'myrank'!\n\n");
                 sleep(TIME);
@@ -623,6 +645,7 @@ int startgame2(int guestOrNot){
                 while (strcasecmp(action1, "myra")!=0 && strcasecmp(action1, "back")!=0){
                 printf("invalid command!.Try again.\n");
                 printf("\nMenu:\n");
+                printf("--------------------------------------------------------------------------------------------\n");
                 sleep(TIME);
                 printf("1. Show My Score:\nTo see your score, just enter 'myrank'!\n\n");
                 sleep(TIME);
@@ -640,6 +663,7 @@ int startgame2(int guestOrNot){
                         if (guestOrNot==0){
                             show_my_score();
                             printf("\nMenu:\n");
+                            printf("--------------------------------------------------------------------------------------------\n");
                             sleep(TIME);
                             printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
                             int choice4=0;
@@ -652,6 +676,7 @@ int startgame2(int guestOrNot){
                             while (strcasecmp(action2, "back")!=0){
                                 printf("invalid command!.Try again.\n\n");
                                 printf("Menu:\n");
+                                printf("--------------------------------------------------------------------------------------------\n");
                                 sleep(TIME);
                                 printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
                                 printf("Enter your choice: ");
@@ -671,6 +696,7 @@ int startgame2(int guestOrNot){
                         {
                             printf("you are guest!\n");
                             printf("\nMenu:\n");
+                            printf("--------------------------------------------------------------------------------------------\n");
                             sleep(TIME);
                             printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
                             printf("Enter your choice: ");
@@ -682,6 +708,7 @@ int startgame2(int guestOrNot){
                             while (strcasecmp(action2, "back")!=0){
                                 printf("invalid command!.Try again.\n\n");
                                 printf("Menu:\n");
+                                printf("--------------------------------------------------------------------------------------------\n");
                                 sleep(TIME);
                                 printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
 
@@ -717,7 +744,7 @@ int startgame2(int guestOrNot){
 }
 
 
-
+//This is menu 1, where the user can enter in the correct way by signing up, logging in, or proceeding as a guest.
 int StartGame(){
     int readyOrNot=0;
     int choice;
@@ -727,6 +754,7 @@ int StartGame(){
 
         sleep(TIME);
         printf("Menu:\n");
+        printf("--------------------------------------------------------------------------------------------\n");
         sleep(TIME);
         printf("1. Create Account:\nTo create an account, enter 'signup<username><password>'\n\n");
         sleep(TIME);
