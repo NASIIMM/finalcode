@@ -11,7 +11,7 @@
 
 
 
-//In this commit I add the part of my program that related to menu2.
+//In this commit I add the part of my program that related to game and all things about 2048 except showing ranks.
 
 
 
@@ -22,6 +22,7 @@ typedef struct {
     int score;
 } User;
 
+int winOrNo;
 int num_users = 0;
 User users[MAX_USERS];
 char usename12[MAX_USERNAME_LEN];
@@ -100,6 +101,350 @@ int login(char username[100],char password[100]) {
 
 }
 
+int score;
+void initializeBoard(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            board[i][j] = 0;
+        }
+    }
+}
+
+void printBoard(int SIZE,int board[SIZE][SIZE]) {
+    printf("\n");
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j]==0) printf("%6s","-");
+            else printf("%6d", board[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n\nScore: %d\n\n", score);
+}
+
+bool isGameOver(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == 0) {
+                return false;
+            }
+        }
+    }
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE - 1; j++) {
+            if (board[i][j] == board[i][j + 1]) {
+                return false;
+            }
+        }
+    }
+
+    for (int i = 0; i < SIZE - 1; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == board[i + 1][j]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void generateNewTile(int SIZE,int board[SIZE][SIZE]) {
+    int emptyCells[SIZE * SIZE][2];
+    int count = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == 0) {
+                emptyCells[count][0] = i;
+                emptyCells[count][1] = j;
+                count++;
+            }
+        }
+    }
+    if (count > 0) {
+        int index = rand() % count;
+        int row = emptyCells[index][0];
+        int col = emptyCells[index][1];
+        board[row][col] = (rand() % 2 + 1) * 2;
+    }
+}
+
+void moveTilesLeft(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        int index = 0;
+
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] != 0) {
+                board[i][index] = board[i][j];
+                if (j != index) {
+                    board[i][j] = 0;
+                }
+                index++;
+            }
+        }
+    }
+}
+
+void mergeTilesLeft(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE - 1; j++) {
+            if (board[i][j] == board[i][j + 1]) {
+                     if (board[i][j]==1024){
+                    if(winOrNo==0){
+                        printf("/nYOU WIN, But you can continue the game./n");
+                        winOrNo++;
+                    }
+                score += board[i][j] * 2;
+                board[i][j] *= 2;
+                board[i][j + 1] = 0;
+
+                }
+
+            }
+        }
+    }
+
+}
+
+void moveTilesUp(int SIZE,int board[SIZE][SIZE]) {
+    for (int j = 0; j < SIZE; j++) {
+        int index = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            if (board[i][j] != 0) {
+                board[index][j] = board[i][j];
+                if (i != index) {
+                    board[i][j] = 0;
+                }
+                index++;
+            }
+        }
+    }
+}
+
+void mergeTilesUp(int SIZE,int board[SIZE][SIZE]) {
+    for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < SIZE - 1; i++) {
+            if (board[i][j] == board[i + 1][j]) {
+                    if (board[i][j]==1024){
+                    if(winOrNo==0){
+                        printf("YOU WIN, But you can continue the game.");
+                        winOrNo++;
+                    }
+                }
+                score += board[i][j] * 2;
+                board[i][j] *= 2;
+                board[i + 1][j] = 0;
+
+
+            }
+        }
+    }
+}
+
+void moveTilesDown(int SIZE,int board[SIZE][SIZE]) {
+    for (int j = 0; j < SIZE; j++) {
+        int index = SIZE - 1;
+
+        for (int i = SIZE - 1; i >= 0; i--) {
+            if (board[i][j] != 0) {
+                board[index][j] = board[i][j];
+                if (i != index) {
+                    board[i][j] = 0;
+                }
+                index--;
+            }
+        }
+    }
+}
+
+void mergeTilesDown(int SIZE,int board[SIZE][SIZE]) {
+    for (int j = 0; j < SIZE; j++) {
+        for (int i = SIZE - 1; i > 0; i--) {
+                if (board[i][j]==1024){
+                    if(winOrNo==0){
+                        printf("YOU WIN, But you can continue the game.");
+                        winOrNo++;
+                    }
+                }
+            if (board[i][j] == board[i - 1][j]) {
+                score += board[i][j] * 2;
+                board[i][j] *= 2;
+                board[i - 1][j] = 0;
+
+
+            }
+        }
+    }
+}
+
+void moveTilesRight(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        int index = SIZE - 1;
+
+        for (int j = SIZE - 1; j >= 0; j--) {
+            if (board[i][j] != 0) {
+                board[i][index] = board[i][j];
+                if (j != index) {
+                    board[i][j] = 0;
+                }
+                index--;
+            }
+        }
+    }
+}
+
+void mergeTilesRight(int SIZE,int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = SIZE - 1; j > 0; j--) {
+            if (board[i][j] == board[i][j - 1]) {
+                    if (board[i][j]==1024){
+                    if(winOrNo==0){
+                        printf("YOU WIN, But you can continue the game.");
+                        winOrNo++;
+                    }
+                }
+                score += board[i][j] * 2;
+                board[i][j] *= 2;
+                board[i][j - 1] = 0;
+
+
+
+            }
+        }
+    }
+}
+
+void settile(int satr,int sotoon,int value,int SIZE,int board[SIZE][SIZE],int guestOrNot){
+    int value2=value;
+    int baghimande=0;
+    int m=1;
+    while(value2!=1){
+        baghimande=value2%2;
+        if(baghimande!=0){
+            baghimande=1;
+            break;
+        }
+        value2/=2;
+    }
+    if (satr>SIZE || sotoon>SIZE){
+        printf("coordinate out of range!\nTry again!\n\n");
+        m=0;
+    }
+    else{
+            if (board[satr-1][sotoon-1]==0){
+            if (baghimande==0){
+                board[satr-1][sotoon-1]=value;
+                m=1;
+            }
+            else{
+                printf("invalid value!\nTry again!\n\n");
+                sleep(TIME);
+                m= 0;
+            }
+    }
+
+    else{
+        printf("cell is not empty!\nTry again!\n\n");
+        sleep(TIME);
+       m=0;
+    }
+}
+
+}
+
+void playGame(int guestOrNot,int SIZE,int board[SIZE][SIZE]) {
+    initializeBoard(SIZE,board);
+    score = 0;
+    generateNewTile(SIZE,board);
+    generateNewTile(SIZE,board);
+    int backornot=0;
+    winOrNo=0;
+    while (!isGameOver(SIZE,board)) {
+        sleep(TIME);
+        printBoard(SIZE,board);
+        sleep(TIME);
+        printf("Enter 'down/up/left/right' \nor you can enter 'exit' for going to the main menu \nor you can enter 'put<i><j><value>' mabey for some cheat:)\n\n");
+        sleep(TIME);
+        char account2_info[200];
+        fgets(account2_info, sizeof(account2_info), stdin);
+        account2_info[strcspn(account2_info, "\n")] = '\0';
+
+        char action1[10];
+        char action2[10];
+        char action3[10];
+        char action4[10];
+        char action5[10];
+        char action6[10];
+
+        sscanf(account2_info, "%2s", action1);
+        sscanf(account2_info, "%4s", action2);
+        sscanf(account2_info, "%4s", action3);
+        sscanf(account2_info, "%5s", action4);
+        sscanf(account2_info, "%3s", action5);
+        sscanf(account2_info, "%4s", action6);
+
+        int satr=0,sotoon=0,value=0;
+
+            if(strcmp(action1,"up")==0){
+                moveTilesUp(SIZE,board);
+                mergeTilesUp(SIZE,board);
+                moveTilesUp(SIZE,board);
+            }
+
+            else if(strcmp(action2,"left")==0){
+                moveTilesLeft(SIZE,board);
+                mergeTilesLeft(SIZE,board);
+                moveTilesLeft(SIZE,board);
+            }
+
+            else if(strcmp(action3,"down")==0){
+                moveTilesDown(SIZE,board);
+                mergeTilesDown(SIZE,board);
+                moveTilesDown(SIZE,board);
+            }
+
+            else if(strcmp(action4,"right")==0){
+                moveTilesRight(SIZE,board);
+                mergeTilesRight(SIZE,board);
+                moveTilesRight(SIZE,board);
+            }
+
+            else if(strcmp(action5,"put")==0){
+                sscanf(account2_info, "put %d %d %d", &satr, &sotoon, &value);
+                int m=0;
+                settile(satr,sotoon,value,SIZE,board,guestOrNot);
+
+            }
+            else if(strcmp(action6,"exit")==0){
+                StartGame(guestOrNot);
+            }
+            else{
+                printf("invalid command!.Try again.\n\n");
+                sleep(TIME);
+                continue;
+
+            }
+
+        generateNewTile(SIZE,board);
+        if (backornot!=0){
+            break;
+        }
+
+
+    }
+
+    if (backornot!=0){
+        return 0;
+    }
+
+
+    else {
+    printf("Game Over! Final Score: %d\n\n", score);
+    sleep(TIME);
+}}
+
 int startgame2(int guestOrNot){
 
         int m=0;
@@ -131,7 +476,7 @@ int startgame2(int guestOrNot){
                 else{
                     m++;
                     int board[SIZE][SIZE];
-                    //go to the game
+                    playGame(guestOrNot,SIZE,board);
                 }
 
             }
