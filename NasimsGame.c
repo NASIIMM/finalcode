@@ -11,7 +11,7 @@
 
 
 
-//In this commit I add the part of my program that related to game and all things about 2048 except showing ranks.
+//In this commit I add the part of my program that related to game especially the ranks.
 
 
 
@@ -354,6 +354,128 @@ void settile(int satr,int sotoon,int value,int SIZE,int board[SIZE][SIZE],int gu
 
 }
 
+void show_all_scores(guestOrNot) {
+    sleep(TIME);
+    printf("\nUsername\t\tScore\n");
+    int scoresarray[num_users];
+    int numarray[num_users];
+    for(int i=0;i<num_users;i++){
+        scoresarray[i]=users[i].score;
+        numarray[i]=i;
+    }
+    int temp=0,temp2=0;
+    for (int i = 0; i < num_users; i++) {
+        for (int j = i+1; j < num_users; j++) {
+           if(scoresarray[i] > scoresarray[j]) {
+               temp = scoresarray[i];
+               temp2= numarray[i];
+               scoresarray[i] = scoresarray[j];
+               numarray[i]=numarray[j];
+               scoresarray[j] = temp;
+               numarray[j]=temp2;
+           }
+
+        }
+    }
+    int j=1;
+    if (num_users<10){
+       for (int i = (num_users-1); i >= 0; i--) {
+        printf("%d-%s\t\t\t%d\n", j,users[numarray[i]].username, scoresarray[i]);
+        j++;
+        sleep(TIME);
+
+    }
+    }
+    else{
+    for (int i = (num_users-1); i > (num_users-11); i--) {
+        printf("%d-%s\t\t\t%d\n", j,users[numarray[i]].username, scoresarray[i]);
+        j++;
+        sleep(TIME);
+    }
+    }
+
+}
+
+void show_my_score() {
+    int scoresarray[num_users];
+    int numarray[num_users];
+    for(int i=0;i<num_users;i++){
+        scoresarray[i]=users[i].score;
+        numarray[i]=i;
+    }
+    int temp=0,temp2=0;
+    for (int i = 0; i < num_users; i++) {
+        for (int j = i+1; j < num_users; j++) {
+           if(scoresarray[i] > scoresarray[j]) {
+               temp = scoresarray[i];
+               temp2= numarray[i];
+               scoresarray[i] = scoresarray[j];
+               numarray[i]=numarray[j];
+               scoresarray[j] = temp;
+               numarray[j]=temp2;
+           }
+
+        }
+    }
+    int j=1;
+    for (int i = 0; i < (num_users); i++) {
+        if (strcmp(usename12,users[numarray[i]].username)==0)
+        {
+            printf("\n%d-%s\t\t\t%d\n",(num_users-i),usename12,users[numarray[i]].score);
+        }
+
+    }
+
+}
+
+void save_max_scores() {
+    FILE *file2 = fopen("max_scores.txt", "w");
+    if (!file2) {
+        printf("Error opening the file 'max_scores.txt' for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < num_users; i++) {
+        fprintf(file2, "%s %s %d\n", users[i].username, users[i].password, users[i].score);
+    }
+
+    fclose(file2);
+
+    FILE *file3 = fopen("max_scores.txt", "r");
+    if (!file3) {
+        printf("Error opening the file 'max_scores.txt' for reading.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    FILE *file = fopen("accounts.txt", "w");
+    if (!file) {
+        printf("Error opening the file 'accounts.txt' for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int ch = fgetc(file3);
+    while (ch != EOF) {
+        fputc(ch, file);
+        ch = fgetc(file3);
+    }
+
+    fclose(file3);
+    fclose(file);
+
+
+}
+
+void update_max_score() {
+    for (int i = 0; i < num_users; i++) {
+        if (strcmp(usename12, users[i].username) == 0) {
+            if (score > users[i].score) {
+                users[i].score = score;
+            }
+            break;
+        }
+    }
+}
+
 void playGame(int guestOrNot,int SIZE,int board[SIZE][SIZE]) {
     initializeBoard(SIZE,board);
     score = 0;
@@ -432,7 +554,8 @@ void playGame(int guestOrNot,int SIZE,int board[SIZE][SIZE]) {
             break;
         }
 
-
+    update_max_score();
+    save_max_scores();
     }
 
     if (backornot!=0){
@@ -482,7 +605,8 @@ int startgame2(int guestOrNot){
             }
 
             else if((strcmp(action, "score") == 0)){
-                //show score board
+                save_max_scores();
+                show_all_scores();
                 printf("\nMenu:\n");
                 sleep(TIME);
                 printf("1. Show My Score:\nTo see your score, just enter 'myrank'!\n\n");
@@ -514,7 +638,7 @@ int startgame2(int guestOrNot){
 
                 if(strcasecmp(action1, "myra")==0){
                         if (guestOrNot==0){
-                            //show myrank
+                            show_my_score();
                             printf("\nMenu:\n");
                             sleep(TIME);
                             printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
@@ -616,7 +740,9 @@ int StartGame(){
         fgets(account_info, sizeof(account_info), stdin);
         account_info[strcspn(account_info, "\n")] = '\0';
         char action[10];
+        char action2[10];
         sscanf(account_info, "%6s", action);
+        sscanf(account_info, "%5s", action2);
         int c=0;
         guestOrNot=0;
             if (strcmp(action, "signup") == 0){
@@ -624,7 +750,7 @@ int StartGame(){
                 char password[100];
                 sscanf(account_info, "signup %s %s", username, password);
                 if (create_account(username,password)){{readyOrNot++;}}}
-                else if(strcmp(action, "login<") == 0){
+                else if(strcmp(action2, "login") == 0){
                 char username[100];
                 char password[100];
                 sscanf(account_info, "login %s %s", username, password);
@@ -636,7 +762,7 @@ int StartGame(){
                   else if(c==11){
                     printf("username not found!\n\n"); sleep(TIME);}
             }
-            else if (strcmp(action, "guest") == 0){
+            else if (strcmp(action2, "guest") == 0){
                 guestOrNot++;
                 printf("Ok so you play as a guest.\n\n");
                 sleep(TIME);
