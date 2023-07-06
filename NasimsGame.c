@@ -11,7 +11,7 @@
 
 
 
-//In this commit I just show the part of my program that related to menu one and accounts.
+//In this commit I add the part of my program that related to menu2.
 
 
 
@@ -100,9 +100,162 @@ int login(char username[100],char password[100]) {
 
 }
 
+int startgame2(int guestOrNot){
+
+        int m=0;
+        while (m==0){
+        sleep(TIME);
+        printf("Menu:\n");
+        sleep(TIME);
+        printf("1. Start Game:\nTo start the game, just enter 'start<size>'\n\n");
+        sleep(TIME);
+        printf("2. Show Score Board:\nTo see the score board, enter 'scoreboard'\n\n");
+        sleep(TIME);
+        printf("3. Logout:\nTo logout from your account Or perhaps as a guest just go back to the previous menu, enter 'logout'\n\n");
+        sleep(TIME);
+        printf("Enter your choice: ");
+        sleep(TIME);
+        char account2_info[200];
+        fgets(account2_info, sizeof(account2_info), stdin);
+        account2_info[strcspn(account2_info, "\n")] = '\0';
+        char action[10];
+        sscanf(account2_info, "%5s", action);
+        int SIZE=0;
+            if((strcmp(action, "start") == 0)){
+                sscanf(account2_info, "start %d", &SIZE);
+                if (SIZE<3)
+                    {
+                    SIZE=0;
+                    printf("invalid size, size must be bigger than 2!\n\n");
+                    }
+                else{
+                    m++;
+                    int board[SIZE][SIZE];
+                    //go to the game
+                }
+
+            }
+
+            else if((strcmp(action, "score") == 0)){
+                //show score board
+                printf("\nMenu:\n");
+                sleep(TIME);
+                printf("1. Show My Score:\nTo see your score, just enter 'myrank'!\n\n");
+                sleep(TIME);
+                printf("2. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+                int choice2=0;
+                printf("Enter your choice: ");
+                char account3_info[200];
+                fgets(account3_info, sizeof(account3_info), stdin);
+                account3_info[strcspn(account3_info, "\n")] = '\0';
+                char action1[10];
+                sscanf(account3_info, "%4s", action1);
+
+                while (strcasecmp(action1, "myra")!=0 && strcasecmp(action1, "back")!=0){
+                printf("invalid command!.Try again.\n");
+                printf("\nMenu:\n");
+                sleep(TIME);
+                printf("1. Show My Score:\nTo see your score, just enter 'myrank'!\n\n");
+                sleep(TIME);
+                printf("2. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+                int choice2=0;
+                printf("Enter your choice: ");
+                char account3_info[200];
+                fgets(account3_info, sizeof(account3_info), stdin);
+                account3_info[strcspn(account3_info, "\n")] = '\0';
+                char action1[10];
+                sscanf(account3_info, "%4s", action1);
+                }
+
+                if(strcasecmp(action1, "myra")==0){
+                        if (guestOrNot==0){
+                            //show myrank
+                            printf("\nMenu:\n");
+                            sleep(TIME);
+                            printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+                            int choice4=0;
+                            printf("Enter your choice: ");
+                            char account4_info[200];
+                            fgets(account4_info, sizeof(account4_info), stdin);
+                            account4_info[strcspn(account4_info, "\n")] = '\0';
+                            char action2[10];
+                            sscanf(account4_info, "%4s", action2);
+                            while (strcasecmp(action2, "back")!=0){
+                                printf("invalid command!.Try again.\n\n");
+                                printf("Menu:\n");
+                                sleep(TIME);
+                                printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+                                printf("Enter your choice: ");
+                                char account4_info[200];
+                                fgets(account4_info, sizeof(account4_info), stdin);
+                                account4_info[strcspn(account4_info, "\n")] = '\0';
+                                char action1[10];
+                                sscanf(account4_info, "%4s", action2);
+                            }
+
+                            startgame2(guestOrNot);
+                            m++;
+
+                        }
+
+                        else
+                        {
+                            printf("you are guest!\n");
+                            printf("\nMenu:\n");
+                            sleep(TIME);
+                            printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+                            printf("Enter your choice: ");
+                            char account4_info[200];
+                            fgets(account4_info, sizeof(account4_info), stdin);
+                            account4_info[strcspn(account4_info, "\n")] = '\0';
+                            char action2[10];
+                            sscanf(account4_info, "%4s", action2);
+                            while (strcasecmp(action2, "back")!=0){
+                                printf("invalid command!.Try again.\n\n");
+                                printf("Menu:\n");
+                                sleep(TIME);
+                                printf("1. Back To Last Menu:\nThat is easy, just enter 'back'\n\n");
+
+                                printf("Enter your choice: ");
+                                char account4_info[200];
+                                fgets(account4_info, sizeof(account4_info), stdin);
+                                account4_info[strcspn(account4_info, "\n")] = '\0';
+                                char action2[10];
+                                sscanf(account4_info, "%4s", action2);
+                            }
+                            startgame2(guestOrNot);
+                            m++;
+
+
+                        }
+                }
+                    else if(strcasecmp(action1, "back")==0){
+                        startgame2(guestOrNot);
+                        m++;
+                    }
+                }
+
+            else if(strcasecmp(action, "logou")==0){
+                printf("LogOut!\n\n");
+                StartGame();
+                m++;
+            }
+            else{
+                printf("invalid command!.Try again.\n\n");
+                sleep(TIME);
+        }
+    }
+}
+
+
+
 int StartGame(){
+    int readyOrNot=0;
+    int choice;
+    int guestOrNot=0;
     printf("Welcome to the game!\n\n");
     do {
+
         sleep(TIME);
         printf("Menu:\n");
         sleep(TIME);
@@ -120,34 +273,36 @@ int StartGame(){
         char action[10];
         sscanf(account_info, "%6s", action);
         int c=0;
+        guestOrNot=0;
             if (strcmp(action, "signup") == 0){
                 char username[100];
                 char password[100];
                 sscanf(account_info, "signup %s %s", username, password);
-                if (create_account(username,password)){ }}//TODO
+                if (create_account(username,password)){{readyOrNot++;}}}
                 else if(strcmp(action, "login<") == 0){
                 char username[100];
                 char password[100];
                 sscanf(account_info, "login %s %s", username, password);
                 c=login(username,password);
                 if (c==1) {
-                    printf("Login successful.\n\n");sleep(TIME);
+                    printf("Login successful.\n\n");sleep(TIME);readyOrNot++;
                 } else if(c==10){
                     printf("password incorrect!\n\n"); sleep(TIME);}
                   else if(c==11){
                     printf("username not found!\n\n"); sleep(TIME);}
             }
             else if (strcmp(action, "guest") == 0){
+                guestOrNot++;
                 printf("Ok so you play as a guest.\n\n");
                 sleep(TIME);
-
+                readyOrNot++;
         }
             else{
                 printf("invalid command!.Try again.\n\n");
             }
 
-    }
-    while(1);
+    }while(readyOrNot==0);
+    startgame2(guestOrNot);
 }
 
 
